@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:minWidth="350dp"
+    android:minHeight="200dp">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3" />
+
+    <SeekBar
+        android:id="@+id/distBar"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/distanceTextView"
+        android:layout_centerHorizontal="true"
+        android:max="10"/>
+
+    <SeekBar
+        android:id="@+id/bedBar"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bedroomView"
+        android:layout_alignStart="@+id/distBar"
+        android:layout_centerHorizontal="true"
+        android:max="5"
+        />
+
+    <SeekBar
+        android:id="@+id/priceBar"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/priceView"
+        android:layout_alignParentStart="true"
+        android:layout_centerHorizontal="true"
+        android:max="5000"/>
+
+    <TextView
+        android:id="@+id/priceView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Max. price"
+        android:layout_below="@+id/textView3"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/bedroomView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Max. No. bedrooms"
+        android:layout_below="@+id/priceBar"
+        android:layout_alignStart="@+id/distanceTextView" />
+
+    <TextView
+        android:id="@+id/distanceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity ="center_vertical"
+        android:text="Maximum distance "
+        android:layout_below="@id/bedBar"/>
+
+    <Button
+        android:id="@+id/btnapply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/distBar"
+        android:layout_centerHorizontal="true"
+        android:text="Apply" />
+
+    </RelativeLayout>
+</FrameLayout>
