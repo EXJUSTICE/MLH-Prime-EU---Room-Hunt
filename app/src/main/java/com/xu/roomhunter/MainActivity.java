@@ -65,7 +65,7 @@ import static com.xu.roomhunter.RoomDetailActivity.MY_PERMISSIONS_REQUEST_INTERN
 //using the ID
 
 //
-public class MainActivity extends AppCompatActivity implements  OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+public class MainActivity extends AppCompatActivity implements  OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener,SettingsFragment.updateMapListener {
     GoogleMap googleMap;
     LocationManager locationManager;
     PendingIntent proximityIntent;
@@ -484,6 +484,11 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            SettingsFragment settingsFrag = new SettingsFragment();
+
+            settingsFrag.show(getSupportFragmentManager(), "Settings");
+
+
             return true;
         }
 
@@ -680,6 +685,16 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
 
 
         }
+    }
+
+    @Override
+    public void updateMap(String maxp,String maxb, String maxd){
+
+        // Debug- WORKS Toast.makeText(this,maxp,Toast.LENGTH_LONG).show();
+        googleMap.clear();
+        JSONFetch fetch = new JSONFetch();
+        fetch.execute("http://b116.ml/roomhunt/api/flat-list?max_price="+maxp+"&min_bedroom_no="+maxb);
+
     }
 
 }

@@ -48,6 +48,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,6 +60,7 @@ public class RoomDetailActivity extends AppCompatActivity {
     public PeopleAdapter swapAdapter;
     ArrayList<String>peoplenames;
     ArrayList<String>peopleunis;
+    ArrayList<String>imageurls;
     String JSON;
     TextView roomIDView;
     TextView bedroomView;
@@ -104,7 +106,7 @@ public class RoomDetailActivity extends AppCompatActivity {
         peopleRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         JSONGet jsontask  = new JSONGet();
-        jsontask.execute("http://b116.ml/roomhunt/api/person-interested-in-list?flat_id="+id+"&person_id="+"5");
+        jsontask.execute("http://b116.ml/roomhunt/api/person-interested-in-list?flat_id="+id+"&person_id="+"1");
 
 
 
@@ -136,7 +138,7 @@ public class RoomDetailActivity extends AppCompatActivity {
     public void loadAdapter(){
         if(mAdapter==null){
             //bind topics to adapter, then to recyclerview
-            mAdapter = new PeopleAdapter(RoomDetailActivity.this,peoplenames,peopleunis);
+            mAdapter = new PeopleAdapter(RoomDetailActivity.this,peoplenames,peopleunis,imageurls);
             peopleRecyclerView.setAdapter(mAdapter);
         }else{
             mAdapter.notifyDataSetChanged();
@@ -172,6 +174,7 @@ public class RoomDetailActivity extends AppCompatActivity {
 
             username = (TextView)itemView.findViewById(R.id.nameView);
             useruni= (TextView)itemView.findViewById(R.id.uniView);
+            profile = (ImageView)itemView.findViewById(R.id.imageView);
 
             itemView.setOnClickListener(this);
         }
@@ -228,13 +231,15 @@ public class RoomDetailActivity extends AppCompatActivity {
     private class PeopleAdapter extends RecyclerView.Adapter<peopleHolder>{
         private ArrayList<String>  users;
         private ArrayList <String> unis;
+        private ArrayList <String> urls;
         private Context mContext;
 
 
-        public PeopleAdapter(Context context, ArrayList<String>  user, ArrayList<String> uni){
+        public PeopleAdapter(Context context, ArrayList<String>  user, ArrayList<String> uni, ArrayList<String>url){
             this.mContext =context;
             this.users=user;
             this.unis =uni;
+            this.urls = url;
         }
         @Override
         public peopleHolder onCreateViewHolder(ViewGroup parent, int viewType){
@@ -250,7 +255,8 @@ public class RoomDetailActivity extends AppCompatActivity {
 
             holder.username.setText(users.get(position));
             holder.useruni.setText(unis.get(position));
-            //TODO add in images
+            Picasso.with(getApplicationContext()).load(urls.get(position)).placeholder(R.color.colorAccent).into(holder.profile);
+            //TODO images added
 
         }
         @Override
@@ -281,6 +287,35 @@ public class RoomDetailActivity extends AppCompatActivity {
         }
 
         return nameList;
+
+
+    }
+
+    public ArrayList<String> parseURIJSONintoArrayList(String json){
+        ArrayList<String>urlList = new ArrayList<String>();
+        try{
+            JSONArray array = new JSONArray(json);
+            JSONObject response = array.getJSONObject(0);
+
+            JSONArray people = response.getJSONArray("personList");
+
+            for(int i =0;i<people.length();i++){
+                JSONObject object = people.getJSONObject(i);
+                String url =object.getString("picture");
+
+                urlList.add(url);
+
+                /*Toast toast =Toast.makeText(this,name,Toast.LENGTH_SHORT);
+                toast.show();
+                */
+
+            }
+
+        }catch (org.json.JSONException e){
+            e.printStackTrace();
+        }
+
+        return urlList;
 
 
     }
@@ -384,7 +419,7 @@ public class RoomDetailActivity extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> MyData = new HashMap<String, String>();
                 MyData.put("flat_id",id);
-                MyData.put("person_id", "5");//Add the data you'd like to send to the server.
+                MyData.put("person_id", "1");//Add the data you'd like to send to the server.
                 return MyData;
             }
         };
@@ -412,7 +447,7 @@ public class RoomDetailActivity extends AppCompatActivity {
                 Map<String, String> MyData = new HashMap<String, String>();
                 MyData.put("flat_id",id);
                 MyData.put("delete","true");
-                MyData.put("person_id","5");//Add the data you'd like to send to the server.
+                MyData.put("person_id","1");//Add the data you'd like to send to the server.
                 return MyData;
             }
         };
@@ -494,6 +529,7 @@ public class RoomDetailActivity extends AppCompatActivity {
             JSON = result;
             peoplenames= parseNameJSONintoArrayList(JSON);
             peopleunis = parseUnisJSONintoArrayList(JSON);
+            imageurls =  parseURIJSONintoArrayList(JSON);
             parsePriceAndBedrooms(JSON);
 
 
